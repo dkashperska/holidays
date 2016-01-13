@@ -1,57 +1,46 @@
 package kashperska.parser;
 
-import kashperska.dto.Holiday;
 import kashperska.reader.FileReader;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class HolidayFileParser {
 
     private static final String DATE_FORMAT = "yyyy/MM/dd";
-    private static final String CYRILLIC_ENCODING = "ISO 8859-5";
-    private static Map<String, SimpleDateFormat> formatters = new HashMap<>();
+    private static final String CYRILLIC_ENCODING = "UTF-8";
+    private static final String WHITESPACE = " ";
 
-    public Set<Holiday> createHolidays(String filePath) throws IOException {
-        Holiday holiday;
-        Set<Holiday> holidays = new TreeSet<>();
+    public Map<Date, Set<String>> createHolidays(String filePath) throws IOException {
+        Map<Date, Set<String>> holidays = new TreeMap<>();
 
         FileReader fileReader = new FileReader();
         List<String> lines = fileReader.readFromFile(filePath, CYRILLIC_ENCODING);
 
         for (String line : lines) {
-            String[] splitLine = line.split("(\\d\\s)");
+            String[] splitLine = splitLine(line);
 
-            holiday = createHoliday(splitLine[0], splitLine[1]);
+            Date date = new DateParser().parseDate(splitLine[0], DATE_FORMAT);
 
-            if(holiday != null){
-                holidays.add(holiday);
+            if (holidays.containsKey(date)) {
+                holidays.get(date).add(splitLine[1]);
+            } else {
+                Set<String> names = new TreeSet<>();
+                names.add(splitLine[1]);
+                holidays.put(date, names);
             }
         }
 
         return holidays;
     }
 
-    public Date parseDate(String date, String format)throws ParseException{
-        SimpleDateFormat formatter = formatters.get(format);
-
-        if(formatter == null){
-            formatter = new SimpleDateFormat(format);
-            formatters.put(format,formatter);
-        }
-
-        return formatter.parse(date);
+    public String[] splitLine(String line){
+        String[] result = new String[2];
+            result[0] = StringUtils.substringBefore(line, WHITESPACE);
+            result[1] = StringUtils.substringAfter(line, WHITESPACE);
+        return result;
     }
 
-    private Holiday createHoliday(String date, String name){
-        Holiday holiday = null;
-        try {
-            holiday = new Holiday(parseDate(date, DATE_FORMAT), name);
-        } catch (ParseException e){
-            e.printStackTrace();
-        }
-        return holiday;
-    }
+
 }
