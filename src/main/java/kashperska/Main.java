@@ -19,11 +19,8 @@ public class Main {
             System.out.println(String.format("Could not parse file due to: %s. Exiting.", e));
             System.exit(1);
         }
-        if (displayer != null) {
-            System.out.println("Today:" + nl + displayer.showTodayHolidays());
-            System.out.println("Tomorrow:" + nl + displayer.showTomorrowsHolidays());
-            System.out.println("In next 5 days:" + nl + displayer.showNearFutureHolidays(5, false));
-        }
-
+        System.out.println("Today:" + nl + displayer.showTodayHolidays());
+        System.out.println("Tomorrow:" + nl + displayer.showTomorrowsHolidays());
+        System.out.println("In next 5 days:" + nl + displayer.showNearFutureHolidays(5, false));
     }
 }

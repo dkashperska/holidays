@@ -12,13 +12,11 @@ public class DateParser {
     private static Map<String, DateFormat> formatters = new HashMap<>();
 
     public Date parseDate(String date, String format) throws ParseException {
-        DateFormat formatter = getFormatter(format);
-        return formatter.parse(date);
+        return getFormatter(format).parse(date);
     }
 
     public String formatDate(Date date, String format) {
-        DateFormat formatter = getFormatter(format);
-        return formatter.format(date);
+        return getFormatter(format).format(date);
     }
 
     public DateFormat getFormatter(String format) {

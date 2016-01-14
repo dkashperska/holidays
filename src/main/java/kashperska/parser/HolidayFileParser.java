@@ -24,16 +24,18 @@ public class HolidayFileParser {
 
             Date date = new DateParser().parseDate(splitLine[0], DATE_FORMAT);
 
-            if (date != null) {
-                if (holidays.containsKey(date)) {
-                    holidays.get(date).add(splitLine[1]);
-                } else {
-                    Set<String> names = new LinkedHashSet<>();
-                    names.add(splitLine[1]);
-                    holidays.put(date, names);
-                }
+            if (date == null) {
+                continue;
+            }
+            if (holidays.containsKey(date)) {
+                holidays.get(date).add(splitLine[1]);
+            } else {
+                Set<String> names = new LinkedHashSet<>();
+                names.add(splitLine[1]);
+                holidays.put(date, names);
             }
         }
+
 
         return holidays;
     }
