@@ -11,31 +11,29 @@ public class DateParser {
 
     private static Map<String, DateFormat> formatters = new HashMap<>();
 
-    public Date parseDate(String date, String format) {
-        Date parsedDate = null;
+    public Date parseDate(String date, String format) throws ParseException {
         DateFormat formatter = getFormatter(format);
-
-        try{
-            parsedDate = formatter.parse(date);
-        } catch (ParseException e){
-            e.printStackTrace();
-        }
-
-        return parsedDate;
+        return formatter.parse(date);
     }
 
-    public String convertDate(Date date, String format){
+    public String formatDate(Date date, String format) {
         DateFormat formatter = getFormatter(format);
         return formatter.format(date);
     }
 
-    public DateFormat getFormatter(String format){
+    public DateFormat getFormatter(String format) {
         DateFormat formatter = formatters.get(format);
+        if (formatter == null) {
+            synchronized (formatters) {
+                formatter = formatters.get(format);
 
-        if(formatter == null){
-            formatter = new SimpleDateFormat(format);
-            formatters.put(format,formatter);
+                if (formatter == null) {
+                    formatter = new SimpleDateFormat(format);
+                    formatters.put(format, formatter);
+                }
+            }
         }
+
         return formatter;
     }
 
