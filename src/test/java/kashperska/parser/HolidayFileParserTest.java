@@ -23,6 +23,7 @@ public class HolidayFileParserTest {
     private static final String FIFTH_HOLIDAY = "Holiday 5";
     private static final String WHITESPACE = " ";
     private static final String DATE_FORMAT = "yyyy/MM/dd";
+    private static final String INVALID_DATE_FORMAT = "yyyy.dd.MM";
 
 
     private HolidayFileParser holidayFileParser;
@@ -40,7 +41,7 @@ public class HolidayFileParserTest {
 
     @Test
     public void shouldCreateMapOfHolidays() throws ParseException {
-        Map<Date, Set<String>> holidays = holidayFileParser.createHolidays(lines);
+        Map<Date, Set<String>> holidays = holidayFileParser.createHolidays(lines,DATE_FORMAT);
         Set<String> firstDateHolidays = holidays.get(parseDate(FIRST_DATE));
         Iterator<String> it1 = firstDateHolidays.iterator();
         assertEquals(FIRST_HOLIDAY, it1.next());
@@ -56,14 +57,20 @@ public class HolidayFileParserTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionWhenLinesObjectIsNull() throws ParseException {
         lines = null;
-        Map<Date, Set<String>> holidays = holidayFileParser.createHolidays(lines);
+        Map<Date, Set<String>> holidays = holidayFileParser.createHolidays(lines, DATE_FORMAT);
         assertTrue("Map of holidays should be empty", holidays.isEmpty());
     }
 
     @Test(expected = ParseException.class)
     public void shouldThrowParseExceptionWhenDateIsInvalid() throws ParseException {
         lines.add(INVALID_DATE + WHITESPACE + FIFTH_HOLIDAY);
-        Map<Date, Set<String>> holidays = holidayFileParser.createHolidays(lines);
+        Map<Date, Set<String>> holidays = holidayFileParser.createHolidays(lines, DATE_FORMAT);
+        assertTrue("Map of holidays object should be null", holidays == null);
+    }
+
+    @Test(expected = ParseException.class)
+    public void shouldThrowParseExceptionWhenDateFormatIsInvalid() throws ParseException {
+        Map<Date, Set<String>> holidays = holidayFileParser.createHolidays(lines, INVALID_DATE_FORMAT);
         assertTrue("Map of holidays object should be null", holidays == null);
     }
 

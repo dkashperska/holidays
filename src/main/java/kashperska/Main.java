@@ -11,7 +11,8 @@ import java.util.List;
 
 public class Main {
 
-    private final static String nl = System.getProperty("line.separator");
+    private static final String nl = System.getProperty("line.separator");
+    private static final String DATE_FORMAT = "yyyy/MM/dd";
 
     public static void main(String[] args) {
         HolidayFileParser parser = new HolidayFileParser();
@@ -19,7 +20,7 @@ public class Main {
         HolidayDisplay displayer = null;
         try {
             List<String> lines = fileReader.readFromFile("src/main/resources/holidays.txt", StandardCharsets.UTF_8);
-            displayer = new HolidayDisplay(parser.createHolidays(lines));
+            displayer = new HolidayDisplay(parser.createHolidays(lines, DATE_FORMAT));
         } catch (IOException | ParseException e) {
             System.out.println(String.format("Could not parse file due to: %s. Exiting.", e));
             System.exit(1);
