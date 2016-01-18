@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FileReader {
 
-    public static List<String> readFromFile(String filePath, Charset encoding) throws IOException {
+    public List<String> readFromFile(String filePath, Charset encoding) throws IOException {
         return FileUtils.readLines(new File(filePath), encoding);
     }
 }

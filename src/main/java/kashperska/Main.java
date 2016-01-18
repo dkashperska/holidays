@@ -1,10 +1,13 @@
 package kashperska;
 
 import kashperska.parser.HolidayFileParser;
+import kashperska.reader.FileReader;
 import kashperska.service.HolidayDisplay;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
+import java.util.List;
 
 public class Main {
 
@@ -12,9 +15,11 @@ public class Main {
 
     public static void main(String[] args) {
         HolidayFileParser parser = new HolidayFileParser();
+        FileReader fileReader = new FileReader();
         HolidayDisplay displayer = null;
         try {
-            displayer = new HolidayDisplay(parser.createHolidays("src/main/resources/holidays.txt"));
+            List<String> lines = fileReader.readFromFile("src/main/resources/holidays.txt", StandardCharsets.UTF_8);
+            displayer = new HolidayDisplay(parser.createHolidays(lines));
         } catch (IOException | ParseException e) {
             System.out.println(String.format("Could not parse file due to: %s. Exiting.", e));
             System.exit(1);
